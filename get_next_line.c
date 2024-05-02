@@ -6,7 +6,7 @@
 /*   By: martmar2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 20:00:55 by martmar2          #+#    #+#             */
-/*   Updated: 2024/05/02 11:42:01 by martmar2         ###   ########.fr       */
+/*   Updated: 2024/05/02 11:50:59 by martmar2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,45 +77,41 @@ char	*cleaner(char *str)
 	return (new_str);
 }
 
-char	*ft_book(char *storage)
+char	*ft_book(char *storage, int fd)
 {
 	char	*buff;
 	int		r;
 
-	buff = malloc(BUFFER_SIZE + 1);
-	if (!buff)
-		return (NULL);
-	r = read(fd, buff, BUFFER_SIZE);
-	if (r <= 0 && (r == -1 || (storage == NULL || storage[0] == 0)))
+	while (ft_strchr(storage, '\n') == NULL)
 	{
+		buff = malloc(BUFFER_SIZE + 1);
+		if (!buff)
+			return (NULL);
+		r = read(fd, buff, BUFFER_SIZE);
+		if (r <= 0 && (r == -1 || (storage == NULL || storage[0] == 0)))
+		{
+			free(storage);
+			storage = NULL;
+			return (free(buff), NULL);
+		}
+		if (r == 0 && (storage != NULL || storage[0] != 0))
+		{
+			free(buff);
+			break ;
+		}
+		buff[r] = 0;
+		storage = ft_strjoin(storage, buff);
 		free(buff);
-		free(storage);
-		storage = NULL;
-		return (NULL);
 	}
-	if (r == 0 && (storage != NULL || storage[0] != 0))
-	{
-		free(buff);
-		break ;
-	}
-	buff[r] = 0;
-	storage = ft_strjoin(storage, buff);
-	free(buff);
+	return (storage);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buff;
 	static char	*storage;
-	int			r;
 	char		*line;
 
-	while (ft_strchr(storage, '\n') == NULL)
-	{
-		storage = ft_book(storage);
-		if (storage == NULL)
-			return (NULL);
-	}
+	storage = ft_book(storage, fd);
 	line = jumper(storage);
 	if (!line)
 	{
