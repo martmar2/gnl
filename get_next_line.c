@@ -6,7 +6,7 @@
 /*   By: martmar2 <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 20:00:55 by martmar2          #+#    #+#             */
-/*   Updated: 2024/05/02 11:50:59 by martmar2         ###   ########.fr       */
+/*   Updated: 2024/05/02 11:53:49 by martmar2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	storage = ft_book(storage, fd);
+	if (storage == NULL)
+		return (NULL);
 	line = jumper(storage);
 	if (!line)
 	{
